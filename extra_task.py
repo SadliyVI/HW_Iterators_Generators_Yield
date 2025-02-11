@@ -1,7 +1,5 @@
 import  types
 
-from flatiterator import flat_generator
-
 
 # Task 3
 class NewFlatIterator:
