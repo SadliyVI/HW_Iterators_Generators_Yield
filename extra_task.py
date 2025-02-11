@@ -1,3 +1,9 @@
+import  types
+
+from flatiterator import flat_generator
+
+
+# Task 3
 class NewFlatIterator:
     def __init__(self, list_of_list):
         self.list_of_list = list_of_list
@@ -22,6 +28,14 @@ class NewFlatIterator:
                 result.extend(self.get_flat_list(item))
         return result
 
+    # Task 4
+def new_flat_generator(list_of_list):
+    for item in list_of_list:
+        if not isinstance(item, list):
+            yield item
+        else:
+            yield from new_flat_generator(item)
+
 def test_3():
 
     list_of_lists_2 = [
@@ -39,14 +53,44 @@ def test_3():
 
     assert list(NewFlatIterator(list_of_lists_2)) == ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None, '!']
 
-
-if __name__ == '__main__':
+def test_4():
     list_of_lists_2 = [
         [['a'], ['b', 'c']],
         ['d', 'e', [['f'], 'h'], False],
         [1, 2, None, [[[[['!']]]]], []]
     ]
+
+    for flat_iterator_item, check_item in zip(
+            new_flat_generator(list_of_lists_2),
+            ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None, '!']
+    ):
+        assert flat_iterator_item == check_item
+
+    assert list(new_flat_generator(list_of_lists_2)) == ['a', 'b', 'c',
+                                                         'd',
+                                                     'e', 'f', 'h', False,
+                                                     1, 2, None, '!']
+
+    assert isinstance(new_flat_generator(list_of_lists_2),
+                      types.GeneratorType)
+
+
+if __name__ == '__main__':
+
+    list_of_lists_2 = [
+        [['a'], ['b', 'c']],
+        ['d', 'e', [['f'], 'h'], False],
+        [1, 2, None, [[[[['!']]]]], []]
+    ]
+
+    # Проверка решения задачи 3
     for item in NewFlatIterator(list_of_lists_2):
         print(item)
 
-    test_3()
+    test_3() # Тест решения задачи 3
+
+    # Проверка решения задачи 4
+    for item in new_flat_generator(list_of_lists_2):
+        print(item)
+
+    test_4() # Тест решения задачи 4
